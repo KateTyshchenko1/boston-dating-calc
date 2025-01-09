@@ -1,0 +1,214 @@
+:root {
+  --lola-purple: #1E1B4B;
+  --lola-pink: #EC4899;
+  --lola-pink-hover: #E84C8B;
+  --lola-text: #FFFFFF;
+  --lola-text-secondary: rgba(255, 255, 255, 0.7);
+  --shadow-dark: #1B1845;
+  --shadow-light: #23205A;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--lola-purple);
+  color: var(--lola-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: var(--lola-text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.card {
+  background-color: var(--lola-purple);
+  border-radius: 24px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow:
+    8px 8px 16px var(--shadow-dark),
+    -8px -8px 16px var(--shadow-light);
+}
+
+.filter-group {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--lola-purple);
+  color: var(--lola-text);
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+  transition: all 0.2s;
+}
+
+.button.active {
+  background: var(--lola-pink);
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.button:hover {
+  background: var(--lola-pink-hover);
+}
+
+.range-row {
+  height: 48px;
+  position: relative;
+}
+
+.range-rail {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 4px;
+  background: #443f75;
+  border-radius: 4px;
+  box-shadow:
+    inset 1px 1px 2px var(--shadow-dark),
+    inset -1px -1px 2px var(--shadow-light);
+}
+
+.range-track {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 4px;
+  background: var(--lola-pink);
+  border-radius: 4px;
+}
+
+.range-thumb {
+  width: 22px;
+  height: 22px;
+  background: var(--lola-pink);
+  border-radius: 50%;
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
+  outline: none;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.range-thumb:hover {
+  box-shadow:
+    1px 1px 2px var(--shadow-dark),
+    -1px -1px 2px var(--shadow-light),
+    0 0 6px var(--lola-pink);
+}
+
+.value-display {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: var(--lola-text);
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: var(--lola-purple);
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+  border: none;
+  appearance: none;
+  outline: none;
+}
+
+.select option {
+  background: #2e2a5f;
+  color: var(--lola-text);
+}
+
+.calculate-button {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--lola-pink);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 2rem;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    -2px -2px 4px rgba(255, 255, 255, 0.2);
+  transition: background 0.2s;
+}
+
+.calculate-button:hover {
+  background: var(--lola-pink-hover);
+}
+
+.result {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: var(--lola-purple);
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+  text-align: center;
+}
+
+.result-value {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--lola-pink);
+  margin: 0;
+}
+
+.result-text {
+  margin-top: 0.5rem;
+  color: var(--lola-text-secondary);
+  font-size: 1.25rem;
+}
+
+.footer {
+  color: var(--lola-text-secondary);
+  font-size: 0.875rem;
+  margin-top: 2rem;
+  text-align: center;
+}
