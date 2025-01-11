@@ -487,7 +487,10 @@ export default function App() {
           <div className="result">
             <h2 className="result-value">{result.percentage}%</h2>
             <p className="result-text">
-              {result.people} people in Boston match your preferences
+              {parseInt(result.people.replace(/,/g, ''), 10) === 1
+                ? `${result.people} person in Boston matches your preferences`
+                : `${result.people} people in Boston match your preferences`
+              }
             </p>
             <p className="disclaimer">
               Life's beautiful chaos doesn't fit in checkboxes. This tool is just for fun —
