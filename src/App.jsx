@@ -5,11 +5,13 @@ import './index.css'
 function DualRangeSlider({ label, values, onChange, min, max, step = 1, formatRangeValue, formatThumbValue }) {
   const rangeFormatter = formatRangeValue || (([a, b]) => `${a} - ${b}`)
   const thumbFormatter = formatThumbValue || (val => val)
+
   const renderThumb = ({ props, value }) => (
     <div {...props} className="range-thumb">
       <div className="range-tooltip">{thumbFormatter(value)}</div>
     </div>
   )
+
   return (
     <div className="filter-group">
       <label>{label}</label>
@@ -43,11 +45,13 @@ function DualRangeSlider({ label, values, onChange, min, max, step = 1, formatRa
 function SingleRangeSlider({ label, value, onChange, min, max, step = 1, formatSliderValue, formatThumbValue }) {
   const sliderFormatter = formatSliderValue || (val => val)
   const thumbFormatter = formatThumbValue || (val => val)
+
   const renderThumb = ({ props, value }) => (
     <div {...props} className="range-thumb">
       <div className="range-tooltip">{thumbFormatter(value)}</div>
     </div>
   )
+
   return (
     <div className="filter-group">
       <label>{label}</label>
@@ -78,6 +82,7 @@ function SingleRangeSlider({ label, value, onChange, min, max, step = 1, formatS
 function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef(null)
+
   useEffect(() => {
     function handleClickOutside(e) {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -89,6 +94,7 @@ function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
   const selectedCount = selectedValues.length
   const summary = selectedCount === 0
     ? 'Select...'
@@ -98,12 +104,16 @@ function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
         .map(v => options.find(o => o.value === v)?.label)
         .slice(0, 2)
         .join(', ') + (selectedCount > 2 ? ` + ${selectedCount - 2}` : '')
+
   function toggleItem(value) {
     const alreadySelected = selectedValues.includes(value)
     let newVals
     if (value === 'any') {
-      if (alreadySelected) newVals = []
-      else newVals = ['any']
+      if (alreadySelected) {
+        newVals = []
+      } else {
+        newVals = ['any']
+      }
     } else {
       if (alreadySelected) {
         newVals = selectedValues.filter(x => x !== value)
@@ -113,6 +123,7 @@ function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
     }
     onChange(newVals)
   }
+
   return (
     <div ref={containerRef} className="multi-dropdown">
       <label>{label}</label>
@@ -158,22 +169,28 @@ export default function App() {
     excludeMarried: true,
     excludeObese: true
   })
+
   const [result, setResult] = useState(null)
   const BOSTON_POPULATION = 653833
+
   function formatRangeArray([low, high]) {
     return `${low} - ${high}`
   }
+
   function formatRangeThumb(val) {
     return String(val)
   }
+
   function formatHeightInches(num) {
     const ft = Math.floor(num / 12)
     const r = num % 12
     return `${ft}'${r}"`
   }
+
   function formatHeightRange([low, high]) {
     return `${formatHeightInches(low)} - ${formatHeightInches(high)}`
   }
+
   function calculateMatch() {
     let probability = 100
     probability *= preferences.gender === 'Women' ? 0.519 : 0.481
@@ -181,51 +198,81 @@ export default function App() {
     probability *= Math.min(ageWidth / 62, 1)
     const hRange = Math.abs(preferences.heightRange[1] - preferences.heightRange[0])
     probability *= Math.min(hRange / (4 * 2.7), 1)
+
     if (preferences.ethnicity.length > 0 && !preferences.ethnicity.includes('any')) {
       const eStats = { white: 0.478, black: 0.215, asian: 0.1, hispanic: 0.189, native: 0.003, pacific: 0.001 }
       let sumE = 0
       preferences.ethnicity.forEach(e => { sumE += eStats[e] || 0.01 })
       probability *= Math.min(sumE, 1)
     }
+
     if (preferences.minIncome >= 150000) probability *= 0.15
     else if (preferences.minIncome >= 100000) probability *= 0.35
     else if (preferences.minIncome >= 50000) probability *= 0.65
+
     if (preferences.education.length > 0 && !preferences.education.includes('any')) {
       const eduStats = { high_school: 0.889, some_college: 0.64, bachelors: 0.541, masters: 0.24, doctorate: 0.05 }
       let sumEdu = 0
       preferences.education.forEach(e => { sumEdu += eduStats[e] || 0.15 })
       probability *= Math.min(sumEdu, 1)
     }
+
     if (preferences.eyeColor.length > 0 && !preferences.eyeColor.includes('any')) {
       const eyeStats = { brown: 0.45, blue: 0.27, hazel: 0.18, green: 0.09 }
       let sumEye = 0
       preferences.eyeColor.forEach(ec => { sumEye += eyeStats[ec] || 0.01 })
       probability *= Math.min(sumEye, 1)
     }
+
     if (preferences.hairColor.length > 0 && !preferences.hairColor.includes('any')) {
       const hairStats = { black: 0.85, brown: 0.11, blonde: 0.02, red: 0.01 }
       let sumHair = 0
       preferences.hairColor.forEach(h => { sumHair += hairStats[h] || 0.01 })
       probability *= Math.min(sumHair, 1)
     }
+
     if (preferences.religion.length > 0 && !preferences.religion.includes('any')) {
-      const rStats = { non_religious: 0.36, catholic: 0.45, baptist: 0.02, muslim: 0.02, eastern: 0.03 }
+      const rStats = {
+        non_religious: 0.35,
+        christian: 0.595,
+        jewish: 0.01,
+        islamic: 0.015,
+        hindu: 0.01,
+        other: 0.025
+      }
       let sumR = 0
-      preferences.religion.forEach(r => { sumR += rStats[r] || 1 })
+      preferences.religion.forEach(r => {
+        sumR += rStats[r] || 1
+      })
       probability *= Math.min(sumR, 1)
     }
-    if (preferences.smokes === 'No') probability *= preferences.gender === 'Men' ? 0.88 : 0.9
-    else if (preferences.smokes === 'Yes') probability *= preferences.gender === 'Men' ? 0.12 : 0.1
-    if (preferences.drinks === 'Yes') probability *= preferences.gender === 'Men' ? 0.56 : 0.48
-    else if (preferences.drinks === 'No') probability *= preferences.gender === 'Men' ? 0.44 : 0.52
-    if (preferences.drugs === 'Yes') probability *= preferences.gender === 'Men' ? 0.125 : 0.08
-    else if (preferences.drugs === 'No') probability *= preferences.gender === 'Men' ? 0.875 : 0.92
+
+    if (preferences.smokes === 'No') {
+      probability *= preferences.gender === 'Men' ? 0.88 : 0.9
+    } else if (preferences.smokes === 'Yes') {
+      probability *= preferences.gender === 'Men' ? 0.12 : 0.1
+    }
+
+    if (preferences.drinks === 'Yes') {
+      probability *= preferences.gender === 'Men' ? 0.56 : 0.48
+    } else if (preferences.drinks === 'No') {
+      probability *= preferences.gender === 'Men' ? 0.44 : 0.52
+    }
+
+    if (preferences.drugs === 'Yes') {
+      probability *= preferences.gender === 'Men' ? 0.125 : 0.08
+    } else if (preferences.drugs === 'No') {
+      probability *= preferences.gender === 'Men' ? 0.875 : 0.92
+    }
+
     if (preferences.excludeMarried) probability *= 0.65
     if (preferences.excludeObese) probability *= 0.78
+
     const matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100))
     const finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2)
     setResult({ percentage: finalProb, people: matchingPeople.toLocaleString() })
   }
+
   const ethnicityOptions = [
     { value: 'any', label: 'Any' },
     { value: 'white', label: 'White' },
@@ -235,14 +282,16 @@ export default function App() {
     { value: 'native', label: 'American Indian' },
     { value: 'pacific', label: 'Pacific Islander' }
   ]
+
   const educationOptions = [
     { value: 'any', label: 'Any' },
     { value: 'high_school', label: 'High School Graduate' },
     { value: 'some_college', label: 'Some College' },
-    { value: 'bachelors', label: 'Bachelor\'s Degree' },
-    { value: 'masters', label: 'Master\'s Degree' },
+    { value: 'bachelors', label: "Bachelor's Degree" },
+    { value: 'masters', label: "Master's Degree" },
     { value: 'doctorate', label: 'Doctorate' }
   ]
+
   const eyeColorOptions = [
     { value: 'any', label: 'Any' },
     { value: 'brown', label: 'Brown' },
@@ -250,6 +299,7 @@ export default function App() {
     { value: 'hazel', label: 'Hazel' },
     { value: 'green', label: 'Green' }
   ]
+
   const hairColorOptions = [
     { value: 'any', label: 'Any' },
     { value: 'black', label: 'Black Hair' },
@@ -257,14 +307,17 @@ export default function App() {
     { value: 'blonde', label: 'Blonde Hair' },
     { value: 'red', label: 'Red Hair' }
   ]
+
   const religionOptions = [
     { value: 'any', label: 'Any' },
-    { value: 'non_religious', label: 'Non-Religious' },
-    { value: 'catholic', label: 'Catholic' },
-    { value: 'baptist', label: 'Baptist' },
-    { value: 'muslim', label: 'Muslim' },
-    { value: 'eastern', label: 'Eastern Faiths' }
+    { value: 'non_religious', label: 'Non-religious' },
+    { value: 'christian', label: 'Christian' },
+    { value: 'jewish', label: 'Jewish' },
+    { value: 'islamic', label: 'Islamic' },
+    { value: 'hindu', label: 'Hinduism' },
+    { value: 'other', label: 'Other' }
   ]
+
   return (
     <div className="container">
       <h1 className="title">Find your match in Boston</h1>
@@ -284,6 +337,7 @@ export default function App() {
             ))}
           </div>
         </div>
+
         <DualRangeSlider
           label="Age"
           values={preferences.ageRange}
@@ -294,6 +348,7 @@ export default function App() {
           formatRangeValue={formatRangeArray}
           formatThumbValue={formatRangeThumb}
         />
+
         <DualRangeSlider
           label="Height"
           values={preferences.heightRange}
@@ -304,6 +359,7 @@ export default function App() {
           formatRangeValue={formatHeightRange}
           formatThumbValue={formatHeightInches}
         />
+
         <SingleRangeSlider
           label="Minimum Income"
           value={preferences.minIncome}
@@ -314,36 +370,42 @@ export default function App() {
           formatSliderValue={v => `$${v.toLocaleString()}`}
           formatThumbValue={v => `$${v.toLocaleString()}`}
         />
+
         <MultiCheckboxDropdown
           label="Ethnicity"
           options={ethnicityOptions}
           selectedValues={preferences.ethnicity}
           onChange={newVals => setPreferences({ ...preferences, ethnicity: newVals })}
         />
+
         <MultiCheckboxDropdown
           label="Education"
           options={educationOptions}
           selectedValues={preferences.education}
           onChange={newVals => setPreferences({ ...preferences, education: newVals })}
         />
+
         <MultiCheckboxDropdown
           label="Eye Color"
           options={eyeColorOptions}
           selectedValues={preferences.eyeColor}
           onChange={newVals => setPreferences({ ...preferences, eyeColor: newVals })}
         />
+
         <MultiCheckboxDropdown
           label="Hair Color"
           options={hairColorOptions}
           selectedValues={preferences.hairColor}
           onChange={newVals => setPreferences({ ...preferences, hairColor: newVals })}
         />
+
         <MultiCheckboxDropdown
           label="Religion"
           options={religionOptions}
           selectedValues={preferences.religion}
           onChange={newVals => setPreferences({ ...preferences, religion: newVals })}
         />
+
         <div className="filter-group">
           <label>Smokes</label>
           <div className="button-group">
@@ -358,6 +420,7 @@ export default function App() {
             ))}
           </div>
         </div>
+
         <div className="filter-group">
           <label>Drinks</label>
           <div className="button-group">
@@ -372,6 +435,7 @@ export default function App() {
             ))}
           </div>
         </div>
+
         <div className="filter-group">
           <label>Drugs</label>
           <div className="button-group">
@@ -386,6 +450,7 @@ export default function App() {
             ))}
           </div>
         </div>
+
         {[
           ['Exclude Married', 'excludeMarried'],
           ['Exclude Obese', 'excludeObese']
@@ -408,7 +473,11 @@ export default function App() {
             </div>
           </div>
         ))}
-        <button className="calculate-button" onClick={calculateMatch}>Let's Find Out</button>
+
+        <button className="calculate-button" onClick={calculateMatch}>
+          Let's Find Out
+        </button>
+
         {result && (
           <div className="result">
             <h2 className="result-value">{result.percentage}%</h2>
