@@ -186,6 +186,18 @@ label {
   font-size: 1.25rem;
 }
 
+.disclaimer {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: #fff;
+  background-color: rgba(236, 72, 153, 0.15);
+  border-left: 4px solid var(--lola-pink);
+  border-radius: 8px;
+}
+
 .footer {
   color: var(--lola-text-secondary);
   font-size: 0.875rem;

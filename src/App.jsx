@@ -268,8 +268,13 @@ export default function App() {
     if (preferences.excludeMarried) probability *= 0.65
     if (preferences.excludeObese) probability *= 0.78
 
-    const matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100))
-    const finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2)
+    let matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100))
+    if (matchingPeople <= 0) matchingPeople = 1
+    let finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2)
+    if (Number(finalProb) === 0) {
+      finalProb = '1.00'
+    }
+
     setResult({ percentage: finalProb, people: matchingPeople.toLocaleString() })
   }
 
@@ -482,6 +487,11 @@ export default function App() {
           <div className="result">
             <h2 className="result-value">{result.percentage}%</h2>
             <p className="result-text">{result.people} people in Boston match your preferences</p>
+            <p className="disclaimer">
+              Life's beautiful chaos doesn't fit in checkboxes. This tool is just for fun —
+              the best connections often come when we let go of our carefully crafted lists
+              and let real chemistry take the lead.
+            </p>
           </div>
         )}
       </div>
