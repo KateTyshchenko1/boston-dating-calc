@@ -125,6 +125,7 @@ label {
   outline: none;
   transition: box-shadow 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .range-thumb:hover {
@@ -138,27 +139,6 @@ label {
   margin-top: 0.5rem;
   font-size: 1.25rem;
   text-align: center;
-}
-
-.select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  color: var(--lola-text);
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: var(--lola-purple);
-  box-shadow:
-    inset 2px 2px 4px var(--shadow-dark),
-    inset -2px -2px 4px var(--shadow-light);
-  border: none;
-  appearance: none;
-  outline: none;
-}
-
-.select option {
-  background: #2e2a5f;
-  color: var(--lola-text);
 }
 
 .calculate-button {
@@ -211,4 +191,89 @@ label {
   font-size: 0.875rem;
   margin-top: 2rem;
   text-align: center;
+}
+
+.range-tooltip {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--lola-pink);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
+}
+
+.multi-dropdown {
+  margin-bottom: 2rem;
+  position: relative;
+  text-align: left;
+}
+
+.multi-dropdown label {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.multi-dropdown-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--lola-purple);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: var(--lola-text);
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+  font-size: 1rem;
+}
+
+.multi-dropdown-control span {
+  text-align: left;
+  flex: 1;
+}
+
+.multi-dropdown-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #2e2a5f;
+  border-radius: 12px;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
+  padding: 0.5rem;
+}
+
+.multi-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.multi-dropdown-item span {
+  margin-left: 6px;
+}
+
+.multi-dropdown-item input {
+  cursor: pointer;
+}
+
+.arrow {
+  margin-left: 8px;
 }
