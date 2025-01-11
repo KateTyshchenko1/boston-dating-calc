@@ -150,8 +150,8 @@ export default function App() {
     ethnicity: [],
     education: [],
     eyeColor: [],
-    religion: [],
     hairColor: [],
+    religion: [],
     smokes: 'No',
     drinks: 'Either',
     drugs: 'Either',
@@ -196,12 +196,6 @@ export default function App() {
       preferences.education.forEach(e => { sumEdu += eduStats[e] || 0.15 })
       probability *= Math.min(sumEdu, 1)
     }
-    if (preferences.religion.length > 0 && !preferences.religion.includes('any')) {
-      const rStats = { non_religious: 0.36, catholic: 0.45, baptist: 0.02, muslim: 0.02, eastern: 0.03 }
-      let sumR = 0
-      preferences.religion.forEach(r => { sumR += rStats[r] || 1 })
-      probability *= Math.min(sumR, 1)
-    }
     if (preferences.eyeColor.length > 0 && !preferences.eyeColor.includes('any')) {
       const eyeStats = { brown: 0.45, blue: 0.27, hazel: 0.18, green: 0.09 }
       let sumEye = 0
@@ -213,6 +207,12 @@ export default function App() {
       let sumHair = 0
       preferences.hairColor.forEach(h => { sumHair += hairStats[h] || 0.01 })
       probability *= Math.min(sumHair, 1)
+    }
+    if (preferences.religion.length > 0 && !preferences.religion.includes('any')) {
+      const rStats = { non_religious: 0.36, catholic: 0.45, baptist: 0.02, muslim: 0.02, eastern: 0.03 }
+      let sumR = 0
+      preferences.religion.forEach(r => { sumR += rStats[r] || 1 })
+      probability *= Math.min(sumR, 1)
     }
     if (preferences.smokes === 'No') probability *= preferences.gender === 'Men' ? 0.88 : 0.9
     else if (preferences.smokes === 'Yes') probability *= preferences.gender === 'Men' ? 0.12 : 0.1
@@ -250,6 +250,13 @@ export default function App() {
     { value: 'hazel', label: 'Hazel' },
     { value: 'green', label: 'Green' }
   ]
+  const hairColorOptions = [
+    { value: 'any', label: 'Any' },
+    { value: 'black', label: 'Black Hair' },
+    { value: 'brown', label: 'Brown Hair' },
+    { value: 'blonde', label: 'Blonde Hair' },
+    { value: 'red', label: 'Red Hair' }
+  ]
   const religionOptions = [
     { value: 'any', label: 'Any' },
     { value: 'non_religious', label: 'Non-Religious' },
@@ -257,13 +264,6 @@ export default function App() {
     { value: 'baptist', label: 'Baptist' },
     { value: 'muslim', label: 'Muslim' },
     { value: 'eastern', label: 'Eastern Faiths' }
-  ]
-  const hairColorOptions = [
-    { value: 'any', label: 'Any' },
-    { value: 'black', label: 'Black Hair' },
-    { value: 'brown', label: 'Brown Hair' },
-    { value: 'blonde', label: 'Blonde Hair' },
-    { value: 'red', label: 'Red Hair' }
   ]
   return (
     <div className="container">
@@ -333,16 +333,16 @@ export default function App() {
           onChange={newVals => setPreferences({ ...preferences, eyeColor: newVals })}
         />
         <MultiCheckboxDropdown
-          label="Religion"
-          options={religionOptions}
-          selectedValues={preferences.religion}
-          onChange={newVals => setPreferences({ ...preferences, religion: newVals })}
-        />
-        <MultiCheckboxDropdown
           label="Hair Color"
           options={hairColorOptions}
           selectedValues={preferences.hairColor}
           onChange={newVals => setPreferences({ ...preferences, hairColor: newVals })}
+        />
+        <MultiCheckboxDropdown
+          label="Religion"
+          options={religionOptions}
+          selectedValues={preferences.religion}
+          onChange={newVals => setPreferences({ ...preferences, religion: newVals })}
         />
         <div className="filter-group">
           <label>Smokes</label>
