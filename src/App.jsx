@@ -1,34 +1,47 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Range } from 'react-range'
-import './index.css'
+import React, { useState, useRef, useEffect } from 'react';
+import { Range } from 'react-range';
+import './index.css';
 
-function DualRangeSlider({ label, values, onChange, min, max, step = 1, formatRangeValue, formatThumbValue }) {
-  const rangeFormatter = formatRangeValue || (([a, b]) => `${a} - ${b}`)
-  const thumbFormatter = formatThumbValue || (val => val)
+function DualRangeSlider({
+  label,
+  values,
+  onChange,
+  min,
+  max,
+  step = 1,
+  formatRangeValue,
+  formatThumbValue
+}) {
+  // Provide optional custom formatting
+  const rangeFormatter = formatRangeValue || (([a, b]) => `${a} - ${b}`);
+  const thumbFormatter = formatThumbValue || (val => val);
 
+  // Renders the thumb with a tooltip
   const renderThumb = ({ props, value }) => (
     <div {...props} className="range-thumb">
       <div className="range-tooltip">{thumbFormatter(value)}</div>
     </div>
-  )
+  );
 
   return (
     <div className="filter-group">
       <label>{label}</label>
+
       <div className="range-row">
         <Range
           values={values}
           step={step}
           min={min}
           max={max}
-          onChange={vals => onChange(vals)}
+          onChange={(vals) => onChange(vals)}
           renderTrack={({ props, children }) => (
             <div {...props} className="range-rail" style={props.style}>
               <div
                 className="range-track"
                 style={{
                   left: `${((Math.min(values[0], values[1]) - min) / (max - min)) * 100}%`,
-                  width: `${(Math.abs(values[1] - values[0]) / (max - min)) * 100}%`
+                  width: `${(Math.abs(values[1] - values[0]) / (max - min)) * 100
+                    }%`
                 }}
               />
               {children}
@@ -37,36 +50,48 @@ function DualRangeSlider({ label, values, onChange, min, max, step = 1, formatRa
           renderThumb={({ props, value }) => renderThumb({ props, value })}
         />
       </div>
-      <div className="value-display">{rangeFormatter(values)}</div>
+      {/* Removed the below-slider value display */}
     </div>
-  )
+  );
 }
 
-function SingleRangeSlider({ label, value, onChange, min, max, step = 1, formatSliderValue, formatThumbValue }) {
-  const sliderFormatter = formatSliderValue || (val => val)
-  const thumbFormatter = formatThumbValue || (val => val)
+function SingleRangeSlider({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  formatSliderValue,
+  formatThumbValue
+}) {
+  const sliderFormatter = formatSliderValue || (val => val);
+  const thumbFormatter = formatThumbValue || (val => val);
 
   const renderThumb = ({ props, value }) => (
     <div {...props} className="range-thumb">
       <div className="range-tooltip">{thumbFormatter(value)}</div>
     </div>
-  )
+  );
 
   return (
     <div className="filter-group">
       <label>{label}</label>
+
       <div className="range-row">
         <Range
           values={[value]}
           step={step}
           min={min}
           max={max}
-          onChange={vals => onChange(vals[0])}
+          onChange={(vals) => onChange(vals[0])}
           renderTrack={({ props, children }) => (
             <div {...props} className="range-rail" style={props.style}>
               <div
                 className="range-track"
-                style={{ width: `${((value - min) / (max - min)) * 100}%` }}
+                style={{
+                  width: `${((value - min) / (max - min)) * 100}%`
+                }}
               />
               {children}
             </div>
@@ -74,67 +99,73 @@ function SingleRangeSlider({ label, value, onChange, min, max, step = 1, formatS
           renderThumb={({ props, value }) => renderThumb({ props, value })}
         />
       </div>
-      <div className="value-display">{sliderFormatter(value)}</div>
+      {/* Removed the below-slider value display */}
     </div>
-  )
+  );
 }
 
 function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
-  const [open, setOpen] = useState(false)
-  const containerRef = useRef(null)
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false)
+        setOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-  const selectedCount = selectedValues.length
-  const summary = selectedCount === 0
-    ? 'Select...'
-    : selectedCount === 1
-      ? options.find(o => o.value === selectedValues[0])?.label
-      : selectedValues
-        .map(v => options.find(o => o.value === v)?.label)
-        .slice(0, 2)
-        .join(', ') + (selectedCount > 2 ? ` + ${selectedCount - 2}` : '')
+  const selectedCount = selectedValues.length;
+  const summary =
+    selectedCount === 0
+      ? 'Select...'
+      : selectedCount === 1
+        ? options.find((o) => o.value === selectedValues[0])?.label
+        : selectedValues
+          .map((v) => options.find((o) => o.value === v)?.label)
+          .slice(0, 2)
+          .join(', ') + (selectedCount > 2 ? ` + ${selectedCount - 2}` : '');
 
   function toggleItem(value) {
-    const alreadySelected = selectedValues.includes(value)
-    let newVals
+    const alreadySelected = selectedValues.includes(value);
+    let newVals;
+
     if (value === 'any') {
+      // if user toggles "any," we clear out the others
       if (alreadySelected) {
-        newVals = []
+        newVals = [];
       } else {
-        newVals = ['any']
+        newVals = ['any'];
       }
     } else {
+      // otherwise, add/remove from the array
       if (alreadySelected) {
-        newVals = selectedValues.filter(x => x !== value)
+        newVals = selectedValues.filter((x) => x !== value);
       } else {
-        newVals = selectedValues.filter(x => x !== 'any').concat(value)
+        newVals = selectedValues.filter((x) => x !== 'any').concat(value);
       }
     }
-    onChange(newVals)
+    onChange(newVals);
   }
 
   return (
     <div ref={containerRef} className="multi-dropdown">
       <label>{label}</label>
+
       <div className="multi-dropdown-control" onClick={() => setOpen(!open)}>
         <span>{summary}</span>
         <div className="arrow">{open ? '▲' : '▼'}</div>
       </div>
+
       {open && (
         <div className="multi-dropdown-menu">
-          {options.map(o => {
-            const checked = selectedValues.includes(o.value)
+          {options.map((o) => {
+            const checked = selectedValues.includes(o.value);
             return (
               <label key={o.value} className="multi-dropdown-item">
                 <input
@@ -144,12 +175,12 @@ function MultiCheckboxDropdown({ label, options, selectedValues, onChange }) {
                 />
                 <span>{o.label}</span>
               </label>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default function App() {
@@ -168,71 +199,111 @@ export default function App() {
     drugs: 'Either',
     excludeMarried: true,
     excludeObese: true
-  })
+  });
 
-  const [result, setResult] = useState(null)
-  const BOSTON_POPULATION = 653833
+  const [result, setResult] = useState(null);
+  const BOSTON_POPULATION = 653833;
 
+  // Example formatters
   function formatRangeArray([low, high]) {
-    return `${low} - ${high}`
+    return `${low} - ${high}`;
   }
-
   function formatRangeThumb(val) {
-    return String(val)
+    return String(val);
   }
 
   function formatHeightInches(num) {
-    const ft = Math.floor(num / 12)
-    const r = num % 12
-    return `${ft}'${r}"`
+    const ft = Math.floor(num / 12);
+    const r = num % 12;
+    return `${ft}'${r}"`;
   }
-
   function formatHeightRange([low, high]) {
-    return `${formatHeightInches(low)} - ${formatHeightInches(high)}`
+    return `${formatHeightInches(low)} - ${formatHeightInches(high)}`;
   }
 
   function calculateMatch() {
-    let probability = 100
+    let probability = 100;
 
-    probability *= preferences.gender === 'Women' ? 0.519 : 0.481
-    const ageWidth = Math.abs(preferences.ageRange[1] - preferences.ageRange[0])
-    probability *= Math.min(ageWidth / 62, 1)
+    // Gender factor
+    probability *= preferences.gender === 'Women' ? 0.519 : 0.481;
 
-    const hRange = Math.abs(preferences.heightRange[1] - preferences.heightRange[0])
-    probability *= Math.min(hRange / (4 * 2.7), 1)
+    // Age factor (just an example approximate range)
+    const ageWidth = Math.abs(preferences.ageRange[1] - preferences.ageRange[0]);
+    probability *= Math.min(ageWidth / 62, 1);
 
+    // Height factor
+    const hRange = Math.abs(preferences.heightRange[1] - preferences.heightRange[0]);
+    probability *= Math.min(hRange / (4 * 2.7), 1);
+
+    // Ethnicity
     if (preferences.ethnicity.length > 0 && !preferences.ethnicity.includes('any')) {
-      const eStats = { white: 0.478, black: 0.215, asian: 0.1, hispanic: 0.189, native: 0.003, pacific: 0.001 }
-      let sumE = 0
-      preferences.ethnicity.forEach(e => { sumE += eStats[e] || 0.01 })
-      probability *= Math.min(sumE, 1)
+      const eStats = {
+        white: 0.478,
+        black: 0.215,
+        asian: 0.1,
+        hispanic: 0.189,
+        native: 0.003,
+        pacific: 0.001
+      };
+      let sumE = 0;
+      preferences.ethnicity.forEach((e) => {
+        sumE += eStats[e] || 0.01;
+      });
+      probability *= Math.min(sumE, 1);
     }
 
-    if (preferences.minIncome >= 150000) probability *= 0.15
-    else if (preferences.minIncome >= 100000) probability *= 0.35
-    else if (preferences.minIncome >= 50000) probability *= 0.65
+    // Income
+    if (preferences.minIncome >= 150000) probability *= 0.15;
+    else if (preferences.minIncome >= 100000) probability *= 0.35;
+    else if (preferences.minIncome >= 50000) probability *= 0.65;
 
+    // Education
     if (preferences.education.length > 0 && !preferences.education.includes('any')) {
-      const eduStats = { high_school: 0.889, some_college: 0.64, bachelors: 0.541, masters: 0.24, doctorate: 0.05 }
-      let sumEdu = 0
-      preferences.education.forEach(e => { sumEdu += eduStats[e] || 0.15 })
-      probability *= Math.min(sumEdu, 1)
+      const eduStats = {
+        high_school: 0.889,
+        some_college: 0.64,
+        bachelors: 0.541,
+        masters: 0.24,
+        doctorate: 0.05
+      };
+      let sumEdu = 0;
+      preferences.education.forEach((e) => {
+        sumEdu += eduStats[e] || 0.15;
+      });
+      probability *= Math.min(sumEdu, 1);
     }
 
+    // Eye color
     if (preferences.eyeColor.length > 0 && !preferences.eyeColor.includes('any')) {
-      const eyeStats = { brown: 0.45, blue: 0.27, hazel: 0.18, green: 0.09 }
-      let sumEye = 0
-      preferences.eyeColor.forEach(ec => { sumEye += eyeStats[ec] || 0.01 })
-      probability *= Math.min(sumEye, 1)
+      const eyeStats = {
+        brown: 0.45,
+        blue: 0.27,
+        hazel: 0.18,
+        green: 0.09
+      };
+      let sumEye = 0;
+      preferences.eyeColor.forEach((ec) => {
+        sumEye += eyeStats[ec] || 0.01;
+      });
+      probability *= Math.min(sumEye, 1);
     }
 
+    // Hair color
     if (preferences.hairColor.length > 0 && !preferences.hairColor.includes('any')) {
-      const hairStats = { black: 0.85, brown: 0.11, blonde: 0.02, red: 0.01 }
-      let sumHair = 0
-      preferences.hairColor.forEach(h => { sumHair += hairStats[h] || 0.01 })
-      probability *= Math.min(sumHair, 1)
+      const hairStats = {
+        black: 0.85,
+        brown: 0.11,
+        blonde: 0.02,
+        red: 0.01
+      };
+      let sumHair = 0;
+      preferences.hairColor.forEach((h) => {
+        sumHair += hairStats[h] || 0.01;
+      });
+      probability *= Math.min(sumHair, 1);
     }
 
+    // Religion
     if (preferences.religion.length > 0 && !preferences.religion.includes('any')) {
       const rStats = {
         non_religious: 0.35,
@@ -241,43 +312,51 @@ export default function App() {
         islamic: 0.015,
         hindu: 0.01,
         other: 0.025
-      }
-      let sumR = 0
-      preferences.religion.forEach(r => {
-        sumR += rStats[r] || 1
-      })
-      probability *= Math.min(sumR, 1)
+      };
+      let sumR = 0;
+      preferences.religion.forEach((r) => {
+        sumR += rStats[r] || 1;
+      });
+      probability *= Math.min(sumR, 1);
     }
 
+    // Smokes
     if (preferences.smokes === 'No') {
-      probability *= preferences.gender === 'Men' ? 0.88 : 0.9
+      probability *= preferences.gender === 'Men' ? 0.88 : 0.9;
     } else if (preferences.smokes === 'Yes') {
-      probability *= preferences.gender === 'Men' ? 0.12 : 0.1
+      probability *= preferences.gender === 'Men' ? 0.12 : 0.1;
     }
 
+    // Drinks
     if (preferences.drinks === 'Yes') {
-      probability *= preferences.gender === 'Men' ? 0.56 : 0.48
+      probability *= preferences.gender === 'Men' ? 0.56 : 0.48;
     } else if (preferences.drinks === 'No') {
-      probability *= preferences.gender === 'Men' ? 0.44 : 0.52
+      probability *= preferences.gender === 'Men' ? 0.44 : 0.52;
     }
 
+    // Drugs
     if (preferences.drugs === 'Yes') {
-      probability *= preferences.gender === 'Men' ? 0.125 : 0.08
+      probability *= preferences.gender === 'Men' ? 0.125 : 0.08;
     } else if (preferences.drugs === 'No') {
-      probability *= preferences.gender === 'Men' ? 0.875 : 0.92
+      probability *= preferences.gender === 'Men' ? 0.875 : 0.92;
     }
 
-    if (preferences.excludeMarried) probability *= 0.65
-    if (preferences.excludeObese) probability *= 0.78
+    // Exclude married/obese
+    if (preferences.excludeMarried) probability *= 0.65;
+    if (preferences.excludeObese) probability *= 0.78;
 
-    let matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100))
-    if (matchingPeople <= 0) matchingPeople = 1
+    let matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100));
+    if (matchingPeople <= 0) matchingPeople = 1;
 
-    const finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2)
+    const finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2);
 
-    setResult({ percentage: finalProb, people: matchingPeople.toLocaleString() })
+    setResult({
+      percentage: finalProb,
+      people: matchingPeople.toLocaleString()
+    });
   }
 
+  // Example dropdown options
   const ethnicityOptions = [
     { value: 'any', label: 'Any' },
     { value: 'white', label: 'White' },
@@ -286,7 +365,7 @@ export default function App() {
     { value: 'hispanic', label: 'Hispanic or Latino' },
     { value: 'native', label: 'American Indian' },
     { value: 'pacific', label: 'Pacific Islander' }
-  ]
+  ];
 
   const educationOptions = [
     { value: 'any', label: 'Any' },
@@ -295,7 +374,7 @@ export default function App() {
     { value: 'bachelors', label: "Bachelor's Degree" },
     { value: 'masters', label: "Master's Degree" },
     { value: 'doctorate', label: 'Doctorate' }
-  ]
+  ];
 
   const eyeColorOptions = [
     { value: 'any', label: 'Any' },
@@ -303,7 +382,7 @@ export default function App() {
     { value: 'blue', label: 'Blue' },
     { value: 'hazel', label: 'Hazel' },
     { value: 'green', label: 'Green' }
-  ]
+  ];
 
   const hairColorOptions = [
     { value: 'any', label: 'Any' },
@@ -311,7 +390,7 @@ export default function App() {
     { value: 'brown', label: 'Brown Hair' },
     { value: 'blonde', label: 'Blonde Hair' },
     { value: 'red', label: 'Red Hair' }
-  ]
+  ];
 
   const religionOptions = [
     { value: 'any', label: 'Any' },
@@ -321,17 +400,19 @@ export default function App() {
     { value: 'islamic', label: 'Islamic' },
     { value: 'hindu', label: 'Hinduism' },
     { value: 'other', label: 'Other' }
-  ]
+  ];
 
   return (
     <div className="container">
       <h1 className="title">Find your match in Boston</h1>
       <p className="subtitle">Let's find out who's available</p>
+
       <div className="card">
+        {/* Gender */}
         <div className="filter-group">
           <label>Gender</label>
           <div className="button-group">
-            {['Men', 'Women'].map(g => (
+            {['Men', 'Women'].map((g) => (
               <button
                 key={g}
                 className={`button ${preferences.gender === g ? 'active' : ''}`}
@@ -346,7 +427,7 @@ export default function App() {
         <DualRangeSlider
           label="Age"
           values={preferences.ageRange}
-          onChange={vals => setPreferences({ ...preferences, ageRange: vals })}
+          onChange={(vals) => setPreferences({ ...preferences, ageRange: vals })}
           min={18}
           max={80}
           step={1}
@@ -357,7 +438,7 @@ export default function App() {
         <DualRangeSlider
           label="Height"
           values={preferences.heightRange}
-          onChange={vals => setPreferences({ ...preferences, heightRange: vals })}
+          onChange={(vals) => setPreferences({ ...preferences, heightRange: vals })}
           min={60}
           max={84}
           step={1}
@@ -368,53 +449,53 @@ export default function App() {
         <SingleRangeSlider
           label="Minimum Income"
           value={preferences.minIncome}
-          onChange={val => setPreferences({ ...preferences, minIncome: val })}
+          onChange={(val) => setPreferences({ ...preferences, minIncome: val })}
           min={0}
           max={300000}
           step={5000}
-          formatSliderValue={v => `$${v.toLocaleString()}`}
-          formatThumbValue={v => `$${v.toLocaleString()}`}
+          formatSliderValue={(v) => `$${v.toLocaleString()}`}
+          formatThumbValue={(v) => `$${v.toLocaleString()}`}
         />
 
         <MultiCheckboxDropdown
           label="Ethnicity"
           options={ethnicityOptions}
           selectedValues={preferences.ethnicity}
-          onChange={newVals => setPreferences({ ...preferences, ethnicity: newVals })}
+          onChange={(newVals) => setPreferences({ ...preferences, ethnicity: newVals })}
         />
 
         <MultiCheckboxDropdown
           label="Education"
           options={educationOptions}
           selectedValues={preferences.education}
-          onChange={newVals => setPreferences({ ...preferences, education: newVals })}
+          onChange={(newVals) => setPreferences({ ...preferences, education: newVals })}
         />
 
         <MultiCheckboxDropdown
           label="Eye Color"
           options={eyeColorOptions}
           selectedValues={preferences.eyeColor}
-          onChange={newVals => setPreferences({ ...preferences, eyeColor: newVals })}
+          onChange={(newVals) => setPreferences({ ...preferences, eyeColor: newVals })}
         />
 
         <MultiCheckboxDropdown
           label="Hair Color"
           options={hairColorOptions}
           selectedValues={preferences.hairColor}
-          onChange={newVals => setPreferences({ ...preferences, hairColor: newVals })}
+          onChange={(newVals) => setPreferences({ ...preferences, hairColor: newVals })}
         />
 
         <MultiCheckboxDropdown
           label="Religion"
           options={religionOptions}
           selectedValues={preferences.religion}
-          onChange={newVals => setPreferences({ ...preferences, religion: newVals })}
+          onChange={(newVals) => setPreferences({ ...preferences, religion: newVals })}
         />
 
         <div className="filter-group">
           <label>Smokes</label>
           <div className="button-group">
-            {['Either', 'Yes', 'No'].map(opt => (
+            {['Either', 'Yes', 'No'].map((opt) => (
               <button
                 key={opt}
                 className={`button ${preferences.smokes === opt ? 'active' : ''}`}
@@ -429,7 +510,7 @@ export default function App() {
         <div className="filter-group">
           <label>Drinks</label>
           <div className="button-group">
-            {['Either', 'Yes', 'No'].map(opt => (
+            {['Either', 'Yes', 'No'].map((opt) => (
               <button
                 key={opt}
                 className={`button ${preferences.drinks === opt ? 'active' : ''}`}
@@ -444,7 +525,7 @@ export default function App() {
         <div className="filter-group">
           <label>Drugs</label>
           <div className="button-group">
-            {['Either', 'Yes', 'No'].map(opt => (
+            {['Either', 'Yes', 'No'].map((opt) => (
               <button
                 key={opt}
                 className={`button ${preferences.drugs === opt ? 'active' : ''}`}
@@ -463,17 +544,19 @@ export default function App() {
           <div key={prefKey} className="filter-group">
             <label>{lbl}</label>
             <div className="button-group">
-              {['Yes', 'No'].map(option => {
-                const boolVal = option === 'Yes'
+              {['Yes', 'No'].map((option) => {
+                const boolVal = option === 'Yes';
                 return (
                   <button
                     key={option}
                     className={`button ${preferences[prefKey] === boolVal ? 'active' : ''}`}
-                    onClick={() => setPreferences({ ...preferences, [prefKey]: boolVal })}
+                    onClick={() =>
+                      setPreferences({ ...preferences, [prefKey]: boolVal })
+                    }
                   >
                     {option}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -489,20 +572,20 @@ export default function App() {
             <p className="result-text">
               {parseInt(result.people.replace(/,/g, ''), 10) === 1
                 ? `${result.people} person in Boston matches your preferences`
-                : `${result.people} people in Boston match your preferences`
-              }
+                : `${result.people} people in Boston match your preferences`}
             </p>
             <p className="disclaimer">
-              Life's beautiful chaos doesn't fit in checkboxes. This tool is just for fun —
-              the best connections often come when we let go of our carefully crafted lists
-              and let real chemistry take the lead
+              Life's beautiful chaos doesn't fit in checkboxes. This tool is just for
+              fun — the best connections often come when we let go of our
+              carefully crafted lists and let real chemistry take the lead.
             </p>
           </div>
         )}
       </div>
+
       <div className="footer">
         Calculated with US Census Bureau data (2023) and approximate assumptions
       </div>
     </div>
-  )
+  );
 }
