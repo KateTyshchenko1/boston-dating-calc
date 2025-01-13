@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 :root {
   --lola-purple: #1E1B4B;
   --lola-pink: #EC4899;
@@ -87,15 +89,11 @@ label {
   background: var(--lola-pink-hover);
 }
 
-/***********************************
- * Range Sliders
- ***********************************/
 .range-row {
   height: 48px;
   position: relative;
 }
 
-/* The background rail on which the slider runs */
 .range-rail {
   position: absolute;
   top: 50%;
@@ -109,7 +107,6 @@ label {
     inset -1px -1px 2px var(--shadow-light);
 }
 
-/* The pink portion that shows the selected range */
 .range-track {
   position: absolute;
   top: 50%;
@@ -119,7 +116,6 @@ label {
   border-radius: 4px;
 }
 
-/* The slider thumb & tooltip */
 .range-thumb {
   width: 22px;
   height: 22px;
@@ -141,7 +137,6 @@ label {
     0 0 6px var(--lola-pink);
 }
 
-/* The tooltip above the thumb */
 .range-tooltip {
   position: absolute;
   bottom: 150%;
@@ -159,9 +154,6 @@ label {
     -2px -2px 4px var(--shadow-light);
 }
 
-/***********************************
- * Calculate Button & Result
- ***********************************/
 .calculate-button {
   width: 100%;
   padding: 1rem;
@@ -207,6 +199,55 @@ label {
   font-size: 1.25rem;
 }
 
+.share-container {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.overlay-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.overlay-big-number {
+  font-size: 90px;
+  font-weight: bold;
+  color: #f55fef;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.overlay-subtitle,
+.overlay-cta {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.overlay-subtitle {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  line-height: 1.25;
+  max-width: 80%;
+}
+
+.overlay-cta {
+  position: absolute;
+  bottom: 2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+  line-height: 1.25;
+  margin-top: 0;
+}
+
 .disclaimer {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -217,18 +258,18 @@ label {
   background-color: rgba(236, 72, 153, 0.15);
   border-left: 4px solid var(--lola-pink);
   border-radius: 8px;
+  max-width: 600px;
+  margin: 1rem auto;
+  text-align: left;
 }
 
 .footer {
-  text-align: center;
   color: var(--lola-text-secondary);
   font-size: 0.875rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
+  text-align: center;
 }
 
-/***********************************
- * MultiCheckboxDropdown
- ***********************************/
 .multi-dropdown {
   margin-bottom: 2rem;
   position: relative;
