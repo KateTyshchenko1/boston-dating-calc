@@ -2,7 +2,7 @@
 
 :root {
   --lola-purple: #1E1B4B;
-  --lola-pink: #EC4899;
+  --lola-pink: #f55fef;
   --lola-pink-hover: #E84C8B;
   --lola-text: #FFFFFF;
   --lola-text-secondary: rgba(255, 255, 255, 0.7);
@@ -199,12 +199,6 @@ label {
   font-size: 1.25rem;
 }
 
-.share-container {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
 .overlay-content {
   position: relative;
   width: 100%;
@@ -219,7 +213,7 @@ label {
 .overlay-big-number {
   font-size: 90px;
   font-weight: bold;
-  color: #f55fef;
+  color: var(--lola-pink);
   margin-bottom: 0.5rem;
   line-height: 1;
 }
@@ -336,4 +330,21 @@ label {
 
 .arrow {
   margin-left: 8px;
+}
+
+
+.share-container {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1 / 1;
+  margin: 1rem auto;
+  position: relative;
+  border-radius: 0;
+  /* No round corners */
+  overflow: visible;
+  /* No white corners from clipping */
+  background-position: center;
+  background-size: contain;
+  /* Avoid upscaling blur */
+  background-repeat: no-repeat;
 }

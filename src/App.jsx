@@ -201,10 +201,13 @@ export default function App() {
   function calculateMatch() {
     let probability = 100;
     probability *= preferences.gender === "Women" ? 0.519 : 0.481;
+
     const ageWidth = Math.abs(preferences.ageRange[1] - preferences.ageRange[0]);
     probability *= Math.min(ageWidth / 62, 1);
+
     const hRange = Math.abs(preferences.heightRange[1] - preferences.heightRange[0]);
     probability *= Math.min(hRange / (4 * 2.7), 1);
+
     if (preferences.ethnicity.length > 0 && !preferences.ethnicity.includes("any")) {
       const eStats = {
         white: 0.478,
@@ -220,9 +223,11 @@ export default function App() {
       });
       probability *= Math.min(sumE, 1);
     }
+
     if (preferences.minIncome >= 150000) probability *= 0.15;
     else if (preferences.minIncome >= 100000) probability *= 0.35;
     else if (preferences.minIncome >= 70000) probability *= 0.55;
+
     if (preferences.education.length > 0 && !preferences.education.includes("any")) {
       const eduStats = {
         high_school: 0.889,
@@ -237,6 +242,7 @@ export default function App() {
       });
       probability *= Math.min(sumEdu, 1);
     }
+
     if (preferences.eyeColor.length > 0 && !preferences.eyeColor.includes("any")) {
       const eyeStats = {
         brown: 0.45,
@@ -250,6 +256,7 @@ export default function App() {
       });
       probability *= Math.min(sumEye, 1);
     }
+
     if (preferences.hairColor.length > 0 && !preferences.hairColor.includes("any")) {
       const hairStats = {
         black: 0.85,
@@ -263,6 +270,7 @@ export default function App() {
       });
       probability *= Math.min(sumHair, 1);
     }
+
     if (preferences.religion.length > 0 && !preferences.religion.includes("any")) {
       const rStats = {
         non_religious: 0.35,
@@ -278,25 +286,31 @@ export default function App() {
       });
       probability *= Math.min(sumR, 1);
     }
+
     if (preferences.smokes === "No") {
       probability *= preferences.gender === "Men" ? 0.88 : 0.9;
     } else if (preferences.smokes === "Yes") {
       probability *= preferences.gender === "Men" ? 0.12 : 0.1;
     }
+
     if (preferences.drinks === "Yes") {
       probability *= preferences.gender === "Men" ? 0.56 : 0.48;
     } else if (preferences.drinks === "No") {
       probability *= preferences.gender === "Men" ? 0.44 : 0.52;
     }
+
     if (preferences.drugs === "Yes") {
       probability *= preferences.gender === "Men" ? 0.125 : 0.08;
     } else if (preferences.drugs === "No") {
       probability *= preferences.gender === "Men" ? 0.875 : 0.92;
     }
+
     if (preferences.excludeMarried) probability *= 0.65;
     if (preferences.excludeObese) probability *= 0.78;
+
     let matchingPeople = Math.round(BOSTON_POPULATION * (probability / 100));
     if (matchingPeople <= 0) matchingPeople = 1;
+
     const finalProb = Math.max(0, Math.min(probability, 100)).toFixed(2);
     setResult({ percentage: finalProb, people: matchingPeople.toLocaleString() });
     setMatches(matchingPeople);
@@ -536,7 +550,6 @@ export default function App() {
           Let's Find Out
         </button>
 
-        {/* Remove repeated # from card: only display the % if you want. */}
         {result && (
           <div className="result">
             <h2 className="result-value">{result.percentage}%</h2>
@@ -546,17 +559,12 @@ export default function App() {
 
       {result && (
         <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          {/* Responsive share-container: background given inline, sizing done by CSS */}
           <div
             ref={shareRef}
             className="share-container"
             style={{
-              width: "600px",
-              height: "600px",
-              margin: "1rem auto",
-              position: "relative",
-              background: `url(${backgroundImg}) center center / cover no-repeat`,
-              borderRadius: "16px",
-              overflow: "hidden"
+              backgroundImage: `url(${backgroundImg})`
             }}
           >
             <div className="overlay-content">
@@ -564,7 +572,7 @@ export default function App() {
               <div className="overlay-subtitle">
                 {parseInt(result.people.replace(/,/g, ""), 10) === 1
                   ? "1 person in Boston match my dating criteria"
-                  : `people in Boston match my dating criteria`}
+                  : "people in Boston match my dating criteria"}
               </div>
               <div className="overlay-cta">
                 Want to know yours?
