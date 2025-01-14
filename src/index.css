@@ -340,11 +340,11 @@ label {
   margin: 1rem auto;
   position: relative;
   border-radius: 0;
-  /* No round corners */
+
   overflow: visible;
-  /* No white corners from clipping */
+
   background-position: center;
   background-size: contain;
-  /* Avoid upscaling blur */
+
   background-repeat: no-repeat;
 }
